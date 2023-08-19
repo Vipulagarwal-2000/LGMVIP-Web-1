@@ -7,20 +7,31 @@ document.addEventListener('DOMContentLoaded', function() {
     addTaskBtn.addEventListener('click', function() {
         const taskText = taskInput.value.trim();
         if (taskText !== '') {
-            const taskItem = document.createElement('li');
-            taskItem.draggable = true; // Make new tasks draggable
-            taskItem.innerHTML = `
-                <span>${taskText}</span>
-                <button class="delete-btn">Delete</button>
-            `;
+            const taskItem = createTaskItem(taskText);
             taskList.appendChild(taskItem);
             taskInput.value = '';
         }
     });
 
+    function createTaskItem(taskText) {
+        const taskItem = document.createElement('li');
+        taskItem.draggable = true;
+        taskItem.innerHTML = `
+            <span>${taskText}</span>
+            <div class="task-buttons">
+                <button class="strike-btn">Strike</button>
+                <button class="delete-btn">Delete</button>
+            </div>
+        `;
+        return taskItem;
+    }
+
     taskList.addEventListener('click', function(event) {
         if (event.target.classList.contains('delete-btn')) {
-            event.target.parentNode.remove();
+            event.target.parentNode.parentNode.remove();
+        } else if (event.target.classList.contains('strike-btn')) {
+            const taskText = event.target.parentNode.parentNode.querySelector('span');
+            taskText.classList.toggle('strikethrough');
         }
     });
 
